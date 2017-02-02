@@ -1,9 +1,9 @@
 # Dataset Source
- Human Activity Recognition Using Smartphones Dataset - Version 1.0
- Jorge L. Reyes-Ortiz, Davide Anguita, Alessandro Ghio, Luca Oneto
- Smartlab - Non Linear Complex Systems Laboratory 
- DITEN - Università degli Studi di Genova
- Via Opera Pia 11A, I-16145, Genoa, Italy 
+ Human Activity Recognition Using Smartphones Dataset - Version 1.0 `<addr>`
+ Jorge L. Reyes-Ortiz, Davide Anguita, Alessandro Ghio, Luca Oneto `<addr>`
+ Smartlab - Non Linear Complex Systems Laboratory `<addr>`
+ DITEN - Università degli Studi di Genova `<addr>`
+ Via Opera Pia 11A, I-16145, Genoa, Italy `<addr>`
  activityrecognition@smartlab.ws www.smartlab.ws 
 
 # Data information
@@ -62,6 +62,7 @@ Finally a Fast Fourier Transform (FFT) was applied to some of these signals prod
 These signals were used to estimate variables of the feature vector for each pattern:
 '-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
 
+|					|					  |
 |:-----------------:|:-------------------:|
 |tBodyAcc-XYZ | tBodyAccMag|
 |tBodyAccJerk-XYZ | tBodyAccJerkMag|
@@ -71,6 +72,7 @@ These signals were used to estimate variables of the feature vector for each pat
 |fBodyAcc-XYZ | fBodyAccMag|
 |fBodyAccJerk-XYZ | fBodyAccJerkMag|
 
+|				 |				 |				   |
 |:--------------:|:-------------:|:---------------:|
 |fBodyGyro-XYZ | fBodyGyroMag | fBodyGyroJerkMag|
 
@@ -98,6 +100,7 @@ angle()      | Angle between to vectors.
 
 Additional vectors obtained by averaging the signals in a signal window sample. These are used on the angle() variable:
 
+|					|
 |:-----------------:|
 |gravityMean|
 |tBodyAccMean|
@@ -107,5 +110,5 @@ Additional vectors obtained by averaging the signals in a signal window sample. 
 
 The complete list of variables of each feature vector is available in 'features.txt'
 
-# Procedures done to modify and update available dataset
+# Procedures done to modify and update available data
 work applied on the original Dataset with loading, cleaning and transform operations 
