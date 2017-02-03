@@ -1,9 +1,9 @@
 # Dataset Source
- Human Activity Recognition Using Smartphones Dataset - Version 1.0 `<addr>`
- Jorge L. Reyes-Ortiz, Davide Anguita, Alessandro Ghio, Luca Oneto `<addr>`
- Smartlab - Non Linear Complex Systems Laboratory `<addr>`
- DITEN - Università degli Studi di Genova `<addr>`
- Via Opera Pia 11A, I-16145, Genoa, Italy `<addr>`
+ Human Activity Recognition Using Smartphones Dataset - Version 1.0  
+ Jorge L. Reyes-Ortiz, Davide Anguita, Alessandro Ghio, Luca Oneto  
+ Smartlab - Non Linear Complex Systems Laboratory  
+ DITEN - Università degli Studi di Genova  
+ Via Opera Pia 11A, I-16145, Genoa, Italy  
  activityrecognition@smartlab.ws www.smartlab.ws 
 
 # Data information
@@ -111,4 +111,4 @@ Additional vectors obtained by averaging the signals in a signal window sample. 
 The complete list of variables of each feature vector is available in 'features.txt'
 
 # Procedures done to modify and update available data
-work applied on the original Dataset with loading, cleaning and transform operations 
+Work applied on the original Dataset with loading, cleaning and transform operations 
