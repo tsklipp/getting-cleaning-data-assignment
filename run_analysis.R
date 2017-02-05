@@ -57,4 +57,4 @@ names(humamActivityRecognition) <- gsub("\\s*\\(+\\)","", names(humamActivityRec
 # Creates a second, independent tidy data set with the average of each variable for each activity and each subject
 tidydataSet <- group_by(humamActivityRecognition, volunteerID, activity) %>% summarise_each(funs(mean))
 
-fwrite(tidydataSet, file = "tidydataSet.csv", row.names = F, col.names = T, sep = "\t", quote = F)
+fwrite(tidydataSet, file = "tidydataset.csv", row.names = F, col.names = T, sep = ",")
