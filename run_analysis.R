@@ -20,7 +20,7 @@ trainVolunteerIDs <- fread("./train/subject_train.txt", header = FALSE, col.name
 testVolunteerActions <- fread("./test/y_test.txt", header = FALSE, col.names = "action")
 testVolunteerIDs <- fread("./test/subject_test.txt", header = FALSE, col.names = "volunteerID")
 
-# Binding together volunteerID and action collums for training and the test sets, also binding the two sets rows to
+# Binding together volunteerID and action collumns for training and the test sets, also binding the two sets rows to
 # form only one
 trainList = dplyr::bind_cols(trainVolunteerIDs, trainVolunteerActions)
 rm(trainVolunteerIDs, trainVolunteerActions)
@@ -30,7 +30,7 @@ volunteerActionsList = dplyr::bind_rows(trainList, testList)
 rm(trainList, testList)
 
 # Uses descriptive activity names to name the activities in the data set, so merge activities labels set with activities
-# names set and select only volunteerID and activity names collums to form a new descriptive data set
+# names set and select only volunteerID and activity names collumns to form a new descriptive data set
 volunteerActionsList <- merge(volunteerActionsList, activities, by.x = "action", by.y = "id")
 volunteerActionsList <- arrange(volunteerActionsList, volunteerID)
 volunteerActionsList <- dplyr::select(volunteerActionsList, volunteerID, activity)
