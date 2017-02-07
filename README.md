@@ -100,7 +100,7 @@ Sets names to features variables. Filter the data set collumns to include only f
         humamActivityRecognition <- select(humamActivityRecognition, volunteerID, action, which(selectedMeasurement))
 ```
 
-Merging data with activities labels and activities names. By doing so, it is possible to replace activities labels (in numbers) with activities names ( descriptive character names). The data set merged is sorted considering volunteerID collumn. Also, it is select only volunteerID and activity collumns along all features variables to form a new descriptive data set 
+Merging data with activities labels and activities names. By doing so, it is possible to replace activities labels (in numbers) with activities names ( descriptive character names). The data set merged is sorted considering volunteerID collumn. Also, it was selected only volunteerID and activity collumns along all features variables to form a new descriptive data set 
 ```{r}
         # Uses descriptive activity names to name the activities in the data set, so merge activities labels set with activities names set
         # select volunteerID and activity names collumns to form a new descriptive data set along all features variables
