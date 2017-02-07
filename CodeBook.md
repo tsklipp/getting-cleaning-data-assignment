@@ -110,5 +110,275 @@ Additional vectors obtained by averaging the signals in a signal window sample. 
 
 The complete list of variables of each feature vector is available in 'features.txt'
 
-# Procedures done to modify and update available data
-Work applied on the original Dataset with loading, cleaning and transform operations 
+# Describing the variables, the data, and any transformations or work procedures done to modify and update available data
+
+Work applied on the original Dataset with loading, cleaning and transform operations
+
+Below are listed the libraries and functions used:
+
+|Library	 |	Functions	           |
+|:--------------:|:-----------------------------:|
+|data.table |  fread, fwrite, merge|
+|dplyr |arrange, bind_rows, bind_cols, funs, group_by, select, summarise_each|
+|base  |make.unique, mean, names, gsub, grepl, rm|
+
+Below are listed all variables created to load data from files when executing run_analysis.R
+
+ activities: created to store data loaded from  "activity_labels.txt" file
+        str(activities)
+        Classes ‘data.table’ and 'data.frame':	6 obs. of  2 variables:
+         $ id      : int  1 2 3 4 5 6
+         $ activity: chr  "WALKING" "WALKING_UPSTAIRS" "WALKING_DOWNSTAIRS" "SITTING" ...
+         
+ features: created to store data loaded from  "features.txt" file
+        str(features)
+        Classes ‘data.table’ and 'data.frame':	561 obs. of  2 variables:
+         $ id     : int  1 2 3 4 5 6 7 8 9 10 ...
+         $ feature: chr  "tBodyAcc-mean()-X" "tBodyAcc-mean()-Y" "tBodyAcc-mean()-Z" "tBodyAcc-std()-X" ...
+         
+ trainVolunteerActions: created to store data loaded from  "y_train.txt" file
+        str(trainVolunteerActions)
+        Classes ‘data.table’ and 'data.frame':	7352 obs. of  1 variable:
+         $ action: int  5 5 5 5 5 5 5 5 5 5 ...
+         
+ trainVolunteerIDs: created to store data loaded from  "subject_train.txt" file
+        str(trainVolunteerIDs)
+        Classes ‘data.table’ and 'data.frame':	7352 obs. of  1 variable:
+         $ volunteerID: int  1 1 1 1 1 1 1 1 1 1 ...
+
+ testVolunteerActions: created to store data loaded from  "y_test.txt" file
+        str(testVolunteerActions)
+        Classes ‘data.table’ and 'data.frame':	2947 obs. of  1 variable:
+         $ action: int  5 5 5 5 5 5 5 5 5 5 ...
+         
+ testVolunteerIDs: created to store data loaded from  "subject_test.txt" file
+        str(testVolunteerIDs)
+        Classes ‘data.table’ and 'data.frame':	2947 obs. of  1 variable:
+         $ volunteerID: int  2 2 2 2 2 2 2 2 2 2 ...         
+ 
+  testSet: created to store data loaded from  "X_test.txt" file
+        str(testSet, list.len = 3)
+        Classes ‘data.table’ and 'data.frame':	2947 obs. of  561 variables:
+         $ V1  : num  0.257 0.286 0.275 0.27 0.275 ...
+         $ V2  : num  -0.0233 -0.0132 -0.0261 -0.0326 -0.0278 ...
+         $ V3  : num  -0.0147 -0.1191 -0.1182 -0.1175 -0.1295 ...
+          [list output truncated]
+
+  trainSet: created to store data loaded from  "X_train.txt" file
+        str(trainSet, list.len = 3)
+        Classes ‘data.table’ and 'data.frame':	7352 obs. of  561 variables:
+         $ V1  : num  0.289 0.278 0.28 0.279 0.277 ...
+         $ V2  : num  -0.0203 -0.0164 -0.0195 -0.0262 -0.0166 ...
+         $ V3  : num  -0.133 -0.124 -0.113 -0.123 -0.115 ...
+          [list output truncated]
+          
+Below are listed all variables created to merge data from above variables
+         
+  testList: contains merged collumns (using bind_cols) of testVolunteerIDs and testVolunteerActions
+        str(testList)
+        Classes ‘data.table’ and 'data.frame':	2947 obs. of  2 variables:
+         $ volunteerID: int  2 2 2 2 2 2 2 2 2 2 ...
+         $ action     : int  5 5 5 5 5 5 5 5 5 5 ...
+         
+  trainList: contains merged collumns (using bind_cols) of trainVolunteerIDs and trainVolunteerActions
+        str(trainList)
+        Classes ‘data.table’ and 'data.frame':	7352 obs. of  2 variables:
+         $ volunteerID: int  1 1 1 1 1 1 1 1 1 1 ...
+         $ action     : int  5 5 5 5 5 5 5 5 5 5 ...
+         
+  volunteerActionsList: contains merged rows (using bind_rows) of trainList and testList
+        str(volunteerActionsList)
+        Classes ‘data.table’ and 'data.frame':	10299 obs. of  2 variables:
+         $ volunteerID: int  2 2 2 2 2 2 2 2 2 2 ...
+         $ action     : int  5 5 5 5 5 5 5 5 5 5 ...       
+         
+  volunteerFeatures: contains merged rows (using bind_rows) of testSet and trainSet
+        str(volunteerFeatures, list.len = 3)
+        Classes ‘data.table’ and 'data.frame':	10299 obs. of  561 variables:
+         $ V1  : num  0.257 0.286 0.275 0.27 0.275 ...
+         $ V2  : num  -0.0233 -0.0132 -0.0261 -0.0326 -0.0278 ...
+         $ V3  : num  -0.0147 -0.1191 -0.1182 -0.1175 -0.1295 ...
+
+  humamActivityRecognition: contains merged columns (using bind_cols) of volunteerActionsList and volunteerFeatures
+        str(humamActivityRecognition, list.len =3)
+        Classes ‘data.table’ and 'data.frame':	10299 obs. of  563 variables:
+         $ volunteerID: int  2 2 2 2 2 2 2 2 2 2 ...
+         $ action     : int  5 5 5 5 5 5 5 5 5 5 ...
+         $ V1         : num  0.257 0.286 0.275 0.27 0.275 ...
+          [list output truncated]
+
+Below are listed all operations realized on data from above variables
+
+  Sets names to features variables from stored names on features$feature. Obs: resolve duplicated names with make.unique function
+        names(humamActivityRecognition)[3:length(humamActivityRecognition)] <- make.unique(features$feature)
+
+  Select only the measurements on the mean and standard deviation for each feature measurement
+        selectedMeasurement <- grepl("mean|std", names(humamActivityRecognition), ignore.case = T)
+        humamActivityRecognition <- select(humamActivityRecognition, volunteerID, action, which(selectedMeasurement))
+        
+  merge activities labels with activities names sets:
+        humamActivityRecognition <- merge(humamActivityRecognition, activities, by.x = "action", by.y = "id")
+        
+  sort humamActivityRecognition to correct arrange volunteers through id     
+        humamActivityRecognition <- arrange(humamActivityRecognition, volunteerID)
+        
+  select only volunteerID, activity and all feature collumns to form a new descriptive data set:
+        selectedMeasurement <- grepl("mean|std", names(humamActivityRecognition), ignore.case = T)
+        humamActivityRecognition <- dplyr::select(humamActivityRecognition, volunteerID, activity, which(selectedMeasurement))
+
+  Appropriately labels the data set with descriptive variable names
+        names(humamActivityRecognition) <- gsub("-","", names(humamActivityRecognition))
+        names(humamActivityRecognition) <- gsub("\\s*\\(+\\)","", names(humamActivityRecognition))
+        
+  humamActivityRecognition will become:
+         str(humamActivityRecognition, list.len = 5)
+        'data.frame':	10299 obs. of  88 variables:
+         $ volunteerID                         : int  1 1 1 1 1 1 1 1 1 1 ...
+         $ activity                            : chr  "WALKING" "WALKING" "WALKING" "WALKING" ...
+         $ tBodyAccmeanX                       : num  0.282 0.256 0.255 0.343 0.276 ...
+         $ tBodyAccmeanY                       : num  -0.0377 -0.06455 0.00381 -0.01445 -0.02964 ...
+         $ tBodyAccmeanZ                       : num  -0.1349 -0.0952 -0.1237 -0.1674 -0.1426 ...
+          [list output truncated]
+         - attr(*, ".internal.selfref")=<externalptr> 
+         - attr(*, "sorted")= chr "action"
+         
+ Creates a second, independent tidy data set with the average of each variable for each activity and each subject
+         tidydataSet <- group_by(humamActivityRecognition, volunteerID, activity) %>% summarise_each(funs(mean))        
+ 
+# The final tidy data set description, genareted with 'prompt' function, it was as follows:
+
+\name{tidydataSet}
+\alias{tidydataSet}
+\docType{data}
+\title{
+%%   ~~ data name/kind ... ~~
+}
+\description{
+%%  ~~  The tidydataSet has the average of each feature for each activity and each volunteer. The features measurements are mean and standard deviation
+        derived values.  ~~
+}
+\usage{data("tidydataSet")}
+\format{
+  A data frame with 180 observations on the following 88 variables.
+  \describe{
+    \item{\code{volunteerID}}{a numeric vector}
+    \item{\code{activity}}{a character vector}
+    \item{\code{tBodyAccmeanX}}{a numeric vector}
+    \item{\code{tBodyAccmeanY}}{a numeric vector}
+    \item{\code{tBodyAccmeanZ}}{a numeric vector}
+    \item{\code{tBodyAccstdX}}{a numeric vector}
+    \item{\code{tBodyAccstdY}}{a numeric vector}
+    \item{\code{tBodyAccstdZ}}{a numeric vector}
+    \item{\code{tGravityAccmeanX}}{a numeric vector}
+    \item{\code{tGravityAccmeanY}}{a numeric vector}
+    \item{\code{tGravityAccmeanZ}}{a numeric vector}
+    \item{\code{tGravityAccstdX}}{a numeric vector}
+    \item{\code{tGravityAccstdY}}{a numeric vector}
+    \item{\code{tGravityAccstdZ}}{a numeric vector}
+    \item{\code{tBodyAccJerkmeanX}}{a numeric vector}
+    \item{\code{tBodyAccJerkmeanY}}{a numeric vector}
+    \item{\code{tBodyAccJerkmeanZ}}{a numeric vector}
+    \item{\code{tBodyAccJerkstdX}}{a numeric vector}
+    \item{\code{tBodyAccJerkstdY}}{a numeric vector}
+    \item{\code{tBodyAccJerkstdZ}}{a numeric vector}
+    \item{\code{tBodyGyromeanX}}{a numeric vector}
+    \item{\code{tBodyGyromeanY}}{a numeric vector}
+    \item{\code{tBodyGyromeanZ}}{a numeric vector}
+    \item{\code{tBodyGyrostdX}}{a numeric vector}
+    \item{\code{tBodyGyrostdY}}{a numeric vector}
+    \item{\code{tBodyGyrostdZ}}{a numeric vector}
+    \item{\code{tBodyGyroJerkmeanX}}{a numeric vector}
+    \item{\code{tBodyGyroJerkmeanY}}{a numeric vector}
+    \item{\code{tBodyGyroJerkmeanZ}}{a numeric vector}
+    \item{\code{tBodyGyroJerkstdX}}{a numeric vector}
+    \item{\code{tBodyGyroJerkstdY}}{a numeric vector}
+    \item{\code{tBodyGyroJerkstdZ}}{a numeric vector}
+    \item{\code{tBodyAccMagmean}}{a numeric vector}
+    \item{\code{tBodyAccMagstd}}{a numeric vector}
+    \item{\code{tGravityAccMagmean}}{a numeric vector}
+    \item{\code{tGravityAccMagstd}}{a numeric vector}
+    \item{\code{tBodyAccJerkMagmean}}{a numeric vector}
+    \item{\code{tBodyAccJerkMagstd}}{a numeric vector}
+    \item{\code{tBodyGyroMagmean}}{a numeric vector}
+    \item{\code{tBodyGyroMagstd}}{a numeric vector}
+    \item{\code{tBodyGyroJerkMagmean}}{a numeric vector}
+    \item{\code{tBodyGyroJerkMagstd}}{a numeric vector}
+    \item{\code{fBodyAccmeanX}}{a numeric vector}
+    \item{\code{fBodyAccmeanY}}{a numeric vector}
+    \item{\code{fBodyAccmeanZ}}{a numeric vector}
+    \item{\code{fBodyAccstdX}}{a numeric vector}
+    \item{\code{fBodyAccstdY}}{a numeric vector}
+    \item{\code{fBodyAccstdZ}}{a numeric vector}
+    \item{\code{fBodyAccmeanFreqX}}{a numeric vector}
+    \item{\code{fBodyAccmeanFreqY}}{a numeric vector}
+    \item{\code{fBodyAccmeanFreqZ}}{a numeric vector}
+    \item{\code{fBodyAccJerkmeanX}}{a numeric vector}
+    \item{\code{fBodyAccJerkmeanY}}{a numeric vector}
+    \item{\code{fBodyAccJerkmeanZ}}{a numeric vector}
+    \item{\code{fBodyAccJerkstdX}}{a numeric vector}
+    \item{\code{fBodyAccJerkstdY}}{a numeric vector}
+    \item{\code{fBodyAccJerkstdZ}}{a numeric vector}
+    \item{\code{fBodyAccJerkmeanFreqX}}{a numeric vector}
+    \item{\code{fBodyAccJerkmeanFreqY}}{a numeric vector}
+    \item{\code{fBodyAccJerkmeanFreqZ}}{a numeric vector}
+    \item{\code{fBodyGyromeanX}}{a numeric vector}
+    \item{\code{fBodyGyromeanY}}{a numeric vector}
+    \item{\code{fBodyGyromeanZ}}{a numeric vector}
+    \item{\code{fBodyGyrostdX}}{a numeric vector}
+    \item{\code{fBodyGyrostdY}}{a numeric vector}
+    \item{\code{fBodyGyrostdZ}}{a numeric vector}
+    \item{\code{fBodyGyromeanFreqX}}{a numeric vector}
+    \item{\code{fBodyGyromeanFreqY}}{a numeric vector}
+    \item{\code{fBodyGyromeanFreqZ}}{a numeric vector}
+    \item{\code{fBodyAccMagmean}}{a numeric vector}
+    \item{\code{fBodyAccMagstd}}{a numeric vector}
+    \item{\code{fBodyAccMagmeanFreq}}{a numeric vector}
+    \item{\code{fBodyBodyAccJerkMagmean}}{a numeric vector}
+    \item{\code{fBodyBodyAccJerkMagstd}}{a numeric vector}
+    \item{\code{fBodyBodyAccJerkMagmeanFreq}}{a numeric vector}
+    \item{\code{fBodyBodyGyroMagmean}}{a numeric vector}
+    \item{\code{fBodyBodyGyroMagstd}}{a numeric vector}
+    \item{\code{fBodyBodyGyroMagmeanFreq}}{a numeric vector}
+    \item{\code{fBodyBodyGyroJerkMagmean}}{a numeric vector}
+    \item{\code{fBodyBodyGyroJerkMagstd}}{a numeric vector}
+    \item{\code{fBodyBodyGyroJerkMagmeanFreq}}{a numeric vector}
+    \item{\samp{angle(tBodyAccMean,gravity)}}{a numeric vector}
+    \item{\samp{angle(tBodyAccJerkMean),gravityMean)}}{a numeric vector}
+    \item{\samp{angle(tBodyGyroMean,gravityMean)}}{a numeric vector}
+    \item{\samp{angle(tBodyGyroJerkMean,gravityMean)}}{a numeric vector}
+    \item{\samp{angle(X,gravityMean)}}{a numeric vector}
+    \item{\samp{angle(Y,gravityMean)}}{a numeric vector}
+    \item{\samp{angle(Z,gravityMean)}}{a numeric vector}
+  }
+}
+\details{
+%%  ~~  volunteerID collumn values corresponds to unique identification for each volunteer.
+        activity collum values correspond to identification for each of the six actions performed by each volunteer.
+        All features collumns values for the __description__ above are mesausures on the mean for each of the six activities performed by volunteers, since the original data 
+        has several observation feature values for activities performed by volunteers ~~
+}
+\source{
+%%  ~~ http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones ~~
+}
+\references{
+%%  ~~  Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 2012 ~~
+}
+\examples{
+        str(tidydataSet, list.len = 7)
+        Classes ‘grouped_df’, ‘tbl_df’, ‘tbl’ and 'data.frame':	180 obs. of  88 variables:
+         $ volunteerID                         : int  1 1 1 1 1 1 2 2 2 2 ...
+         $ activity                            : chr  "LAYING" "SITTING" "STANDING" "WALKING" ...
+         $ tBodyAccmeanX                       : num  0.222 0.261 0.279 0.277 0.289 ...
+         $ tBodyAccmeanY                       : num  -0.04051 -0.00131 -0.01614 -0.01738 -0.00992 ...
+         $ tBodyAccmeanZ                       : num  -0.113 -0.105 -0.111 -0.111 -0.108 ...
+         $ tBodyAccstdX                        : num  -0.928 -0.977 -0.996 -0.284 0.03 ...
+         $ tBodyAccstdY                        : num  -0.8368 -0.9226 -0.9732 0.1145 -0.0319 ...
+          [list output truncated]
+         - attr(*, ".internal.selfref")=<externalptr> 
+         - attr(*, "sorted")= chr "action"
+         - attr(*, "vars")=List of 1
+          ..$ : symbol volunteerID
+         - attr(*, "drop")= logi TRUE
+}
+
+\keyword{datasets}

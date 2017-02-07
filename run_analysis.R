@@ -22,35 +22,35 @@ testVolunteerIDs <- fread("./test/subject_test.txt", header = FALSE, col.names =
 
 # Binding together volunteerID and action collumns for training and the test sets, also binding the two sets rows to
 # form only one
-trainList = dplyr::bind_cols(trainVolunteerIDs, trainVolunteerActions)
-rm(trainVolunteerIDs, trainVolunteerActions)
 testList <- dplyr::bind_cols(testVolunteerIDs, testVolunteerActions)
 rm(testVolunteerIDs, testVolunteerActions)
-volunteerActionsList = dplyr::bind_rows(trainList, testList)
-rm(trainList, testList)
+trainList = dplyr::bind_cols(trainVolunteerIDs, trainVolunteerActions)
+rm(trainVolunteerIDs, trainVolunteerActions)
+volunteerActionsList = dplyr::bind_rows(testList, trainList)
+rm(testList, trainList)
 
-# Uses descriptive activity names to name the activities in the data set, so merge activities labels set with activities
-# names set and select only volunteerID and activity names collumns to form a new descriptive data set
-volunteerActionsList <- merge(volunteerActionsList, activities, by.x = "action", by.y = "id")
-volunteerActionsList <- arrange(volunteerActionsList, volunteerID)
-volunteerActionsList <- dplyr::select(volunteerActionsList, volunteerID, activity)
-        
 # Reading the training and test sets and binding it to create one data set, also setting features names
 testSet <- fread("./test/X_test.txt", header = FALSE)
 trainSet <- fread("./train/X_train.txt", header = FALSE)
 volunteerFeatures = dplyr::bind_rows(testSet, trainSet)
-names(volunteerFeatures) <- features$feature
-rm(trainSet, testSet)
+rm(testSet, trainSet)
 
-# Merges the training and the test sets to create one data set
+# Using merged training and test data of correspondents volunteerActionsList and volunteerFeatures to create one data set 
 humamActivityRecognition <- dplyr::bind_cols(volunteerActionsList, volunteerFeatures)
 rm(volunteerActionsList, volunteerFeatures)
 
-# Extracts only the measurements on the mean and standard deviation for each measurement. First, resolve duplicated names
-# to use select function to retriev  mean and standard deviation variables
-names(humamActivityRecognition) <-  make.unique(names(humamActivityRecognition))
+# Extracts only the measurements on the mean and standard deviation for each measurement. 
+# First, resolve duplicated names to use select function to retriev  mean and standard deviation variables
+names(humamActivityRecognition)[3:length(humamActivityRecognition)] <- make.unique(features$feature)
 selectedMeasurement <- grepl("mean|std", names(humamActivityRecognition), ignore.case = T)
-humamActivityRecognition <- select(humamActivityRecognition, volunteerID, activity, which(selectedMeasurement))
+humamActivityRecognition <- select(humamActivityRecognition, volunteerID, action, which(selectedMeasurement))
+
+# Uses descriptive activity names to name the activities in the data set, so merge activities labels set with activities names set
+# select volunteerID and activity names collumns to form a new descriptive data set along all features variables
+humamActivityRecognition <- merge(humamActivityRecognition, activities, by.x = "action", by.y = "id")
+humamActivityRecognition <- arrange(humamActivityRecognition, volunteerID)
+selectedMeasurement <- grepl("mean|std", names(humamActivityRecognition), ignore.case = T)
+humamActivityRecognition <- dplyr::select(humamActivityRecognition, volunteerID, activity, which(selectedMeasurement))
 
 # Appropriately labels the data set with descriptive variable names
 names(humamActivityRecognition) <- gsub("-","", names(humamActivityRecognition))
