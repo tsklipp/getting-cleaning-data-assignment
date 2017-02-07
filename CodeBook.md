@@ -110,9 +110,7 @@ Additional vectors obtained by averaging the signals in a signal window sample. 
 
 The complete list of variables of each feature vector is available in 'features.txt'
 
-# Describing the variables, the data, and any 
-# transformations or work procedures done to 
-# modify and update available data
+## Describing the variables, the data, and any transformations or work procedures done to modify and update available data
 
 Work applied on the original data set with loading, cleaning and transform operations
 
@@ -127,44 +125,57 @@ Below are listed the libraries and functions used:
 Below are listed all variables created to load data from files when executing run_analysis.R
 
  activities: created to store data loaded from  "activity_labels.txt" file
+ 
          ``` 
         str(activities)
         Classes ‘data.table’ and 'data.frame':	6 obs. of  2 variables:
          $ id      : int  1 2 3 4 5 6
          $ activity: chr  "WALKING" "WALKING_UPSTAIRS" "WALKING_DOWNSTAIRS" "SITTING" ...
         ```          
+        
  features: created to store data loaded from  "features.txt" file
+ 
          ``` 
         str(features)
         Classes ‘data.table’ and 'data.frame':	561 obs. of  2 variables:
          $ id     : int  1 2 3 4 5 6 7 8 9 10 ...
          $ feature: chr  "tBodyAcc-mean()-X" "tBodyAcc-mean()-Y" "tBodyAcc-mean()-Z" "tBodyAcc-std()-X" ...
          ```         
+         
  trainVolunteerActions: created to store data loaded from  "y_train.txt" file
+ 
         ```  
         str(trainVolunteerActions)
         Classes ‘data.table’ and 'data.frame':	7352 obs. of  1 variable:
          $ action: int  5 5 5 5 5 5 5 5 5 5 ...
         ```          
+        
  trainVolunteerIDs: created to store data loaded from  "subject_train.txt" file
+ 
         ```  
         str(trainVolunteerIDs)
         Classes ‘data.table’ and 'data.frame':	7352 obs. of  1 variable:
          $ volunteerID: int  1 1 1 1 1 1 1 1 1 1 ...
         ``` 
+        
  testVolunteerActions: created to store data loaded from  "y_test.txt" file
  
+         ```  
         str(testVolunteerActions)
         Classes ‘data.table’ and 'data.frame':	2947 obs. of  1 variable:
          $ action: int  5 5 5 5 5 5 5 5 5 5 ...
-         
+        ```  
  testVolunteerIDs: created to store data loaded from  "subject_test.txt" file
+ 
+ 
         ```  
         str(testVolunteerIDs)
         Classes ‘data.table’ and 'data.frame':	2947 obs. of  1 variable:
          $ volunteerID: int  2 2 2 2 2 2 2 2 2 2 ...         
          ``` 
+         
   testSet: created to store data loaded from  "X_test.txt" file
+  
         ```   
         str(testSet, list.len = 3)
         Classes ‘data.table’ and 'data.frame':	2947 obs. of  561 variables:
@@ -173,7 +184,9 @@ Below are listed all variables created to load data from files when executing ru
          $ V3  : num  -0.0147 -0.1191 -0.1182 -0.1175 -0.1295 ...
           [list output truncated]
         ``` 
+        
   trainSet: created to store data loaded from  "X_train.txt" file
+  
         ```   
         str(trainSet, list.len = 3)
         Classes ‘data.table’ and 'data.frame':	7352 obs. of  561 variables:
@@ -182,30 +195,38 @@ Below are listed all variables created to load data from files when executing ru
          $ V3  : num  -0.133 -0.124 -0.113 -0.123 -0.115 ...
           [list output truncated]
         ```           
+        
 Below are listed all variables created to merge data from above variables
          
   testList: contains merged collumns (using bind_cols) of testVolunteerIDs and testVolunteerActions
+  
         ```   
         str(testList)
         Classes ‘data.table’ and 'data.frame':	2947 obs. of  2 variables:
          $ volunteerID: int  2 2 2 2 2 2 2 2 2 2 ...
          $ action     : int  5 5 5 5 5 5 5 5 5 5 ...
         ```          
+        
   trainList: contains merged collumns (using bind_cols) of trainVolunteerIDs and trainVolunteerActions
+  
          ```  
         str(trainList)
         Classes ‘data.table’ and 'data.frame':	7352 obs. of  2 variables:
          $ volunteerID: int  1 1 1 1 1 1 1 1 1 1 ...
          $ action     : int  5 5 5 5 5 5 5 5 5 5 ...
         ```          
+        
   volunteerActionsList: contains merged rows (using bind_rows) of trainList and testList
+  
         ```   
         str(volunteerActionsList)
         Classes ‘data.table’ and 'data.frame':	10299 obs. of  2 variables:
          $ volunteerID: int  2 2 2 2 2 2 2 2 2 2 ...
          $ action     : int  5 5 5 5 5 5 5 5 5 5 ...       
         ```         
+        
   volunteerFeatures: contains merged rows (using bind_rows) of testSet and trainSet
+  
         ```   
         str(volunteerFeatures, list.len = 3)
         Classes ‘data.table’ and 'data.frame':	10299 obs. of  561 variables:
@@ -213,7 +234,9 @@ Below are listed all variables created to merge data from above variables
          $ V2  : num  -0.0233 -0.0132 -0.0261 -0.0326 -0.0278 ...
          $ V3  : num  -0.0147 -0.1191 -0.1182 -0.1175 -0.1295 ...
         ``` 
+        
   humamActivityRecognition: contains merged columns (using bind_cols) of volunteerActionsList and volunteerFeatures
+  
         ``` 
         str(humamActivityRecognition, list.len =3)
         Classes ‘data.table’ and 'data.frame':	10299 obs. of  563 variables:
@@ -222,36 +245,50 @@ Below are listed all variables created to merge data from above variables
          $ V1         : num  0.257 0.286 0.275 0.27 0.275 ...
           [list output truncated]
         ```
+        
 Below are listed all operations realized on data from above variables
 
   * Sets names to features variables from stored names on features$feature. Obs: resolve duplicated names with make.unique function
+  
         ```{r}
         names(humamActivityRecognition)[3:length(humamActivityRecognition)] <- make.unique(features$feature)
         ```
+        
   * Select only the measurements on the mean and standard deviation for each feature measurement
+  
         ```{r}
         selectedMeasurement <- grepl("mean|std", names(humamActivityRecognition), ignore.case = T)
         humamActivityRecognition <- select(humamActivityRecognition, volunteerID, action, which(selectedMeasurement))
          ```     
+         
   * merge activities labels with activities names sets:
+  
         ```{r}
         humamActivityRecognition <- merge(humamActivityRecognition, activities, by.x = "action", by.y = "id")
         ```     
+        
   * sort humamActivityRecognition to correct arrange volunteers through id
+  
         ```{r}
         humamActivityRecognition <- arrange(humamActivityRecognition, volunteerID)
         ```     
+        
   * select only volunteerID, activity and all feature collumns to form a new descriptive data set:
         selectedMeasurement <- grepl("mean|std", names(humamActivityRecognition), ignore.case = T)
+        
         ```{r}
         humamActivityRecognition <- dplyr::select(humamActivityRecognition, volunteerID, activity, which(selectedMeasurement))
         ```     
+        
   * Appropriately labels the data set with descriptive variable names
+  
         ```{r}
         names(humamActivityRecognition) <- gsub("-","", names(humamActivityRecognition))
         names(humamActivityRecognition) <- gsub("\\s*\\(+\\)","", names(humamActivityRecognition))
          ```     
+         
   * humamActivityRecognition will become:
+  
         ```
          str(humamActivityRecognition, list.len = 5)
         'data.frame':	10299 obs. of  88 variables:
@@ -266,6 +303,7 @@ Below are listed all operations realized on data from above variables
         ```
         
  Creates a second, independent tidy data set with the average of each variable for each activity and each subject
+ 
         ```{r}
          tidydataSet <- group_by(humamActivityRecognition, volunteerID, activity) %>% summarise_each(funs(mean))        
         ```
