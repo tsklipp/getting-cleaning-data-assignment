@@ -111,7 +111,7 @@ Below are listed all variables created to load data from files when executing ru
         str(activities)
         Classes ‘data.table’ and 'data.frame':	6 obs. of  2 variables:
          $ id      : int  1 2 3 4 5 6
-         $ activity: chr  "WALKING" "WALKING_UPSTAIRS" "WALKING_DOWNSTAIRS" "SITTING" ...
+         $ activity: chr  "WALKING" "WALKING_UPSTAIRS" "WALKING_DOWNSTAIRS" "SITTING" "STANDING" "LAYING"
 
  features: created to store data loaded from  "features.txt" file
  
@@ -141,7 +141,7 @@ Below are listed all variables created to load data from files when executing ru
          
  testVolunteerIDs: created to store data loaded from  "subject_test.txt" file
  
-         str(testVolunteerIDs)
+        str(testVolunteerIDs)
         Classes ‘data.table’ and 'data.frame':	2947 obs. of  1 variable:
          $ volunteerID: int  2 2 2 2 2 2 2 2 2 2 ...         
 
@@ -179,7 +179,7 @@ Below are listed all variables created to merge data from above variables
          $ volunteerID: int  1 1 1 1 1 1 1 1 1 1 ...
          $ action     : int  5 5 5 5 5 5 5 5 5 5 ...
         
-  volunteerActionsList: contains merged rows (using bind_rows) of trainList and testList
+  volunteerActionsList: contains merged rows (using bind_rows) of  testList and trainList
   
         str(volunteerActionsList)
         Classes ‘data.table’ and 'data.frame':	10299 obs. of  2 variables:
@@ -196,7 +196,7 @@ Below are listed all variables created to merge data from above variables
 
   humamActivityRecognition: contains merged columns (using bind_cols) of volunteerActionsList and volunteerFeatures
   
-        str(humamActivityRecognition, list.len =3)
+        str(humamActivityRecognition, list.len = 3)
         Classes ‘data.table’ and 'data.frame':	10299 obs. of  563 variables:
          $ volunteerID: int  2 2 2 2 2 2 2 2 2 2 ...
          $ action     : int  5 5 5 5 5 5 5 5 5 5 ...
@@ -206,44 +206,33 @@ Below are listed all variables created to merge data from above variables
 Below are listed all operations realized on data from above variables
 
   * Sets names to features variables from stored names on features$feature. Obs: resolve duplicated names with make.unique function
-  
         ```{r}
         names(humamActivityRecognition)[3:length(humamActivityRecognition)] <- make.unique(features$feature)
         ```
-        
   * Select only the measurements on the mean and standard deviation for each feature measurement
-  
         ```{r}
         selectedMeasurement <- grepl("mean|std", names(humamActivityRecognition), ignore.case = T)
         humamActivityRecognition <- select(humamActivityRecognition, volunteerID, action, which(selectedMeasurement))
          ```     
          
   * merge activities labels with activities names sets:
-  
         ```{r}
         humamActivityRecognition <- merge(humamActivityRecognition, activities, by.x = "action", by.y = "id")
         ```     
-        
   * sort humamActivityRecognition to correct arrange volunteers through id
-  
         ```{r}
         humamActivityRecognition <- arrange(humamActivityRecognition, volunteerID)
         ```     
-        
   * select only volunteerID, activity and all feature collumns to form a new descriptive data set:
-        selectedMeasurement <- grepl("mean|std", names(humamActivityRecognition), ignore.case = T)
-        
         ```{r}
+        selectedMeasurement <- grepl("mean|std", names(humamActivityRecognition), ignore.case = T)
         humamActivityRecognition <- dplyr::select(humamActivityRecognition, volunteerID, activity, which(selectedMeasurement))
         ```     
-        
   * Appropriately labels the data set with descriptive variable names
-  
         ```{r}
         names(humamActivityRecognition) <- gsub("-","", names(humamActivityRecognition))
         names(humamActivityRecognition) <- gsub("\\s*\\(+\\)","", names(humamActivityRecognition))
          ```     
-         
   * humamActivityRecognition will become:
   
          str(humamActivityRecognition, list.len = 5)
@@ -258,12 +247,11 @@ Below are listed all operations realized on data from above variables
          - attr(*, "sorted")= chr "action"
 
  Creates a second, independent tidy data set with the average of each variable for each activity and each subject
- 
         ```{r}
          tidydataSet <- group_by(humamActivityRecognition, volunteerID, activity) %>% summarise_each(funs(mean))        
         ```
         
-# The final tidy data set description, genareted with 'str' function, it was as follows:
+# The tidy data set brief description generated with 'str' function, it was as follows:
 
         str(tidydataSet, vec.len = 7)
         Classes ‘grouped_df’, ‘tbl_df’, ‘tbl’ and 'data.frame':	180 obs. of  88 variables:
