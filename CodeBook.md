@@ -205,35 +205,40 @@ Below are listed all variables created to merge data from above variables
 
 Below are listed all operations realized on data from above variables
 
-  * Sets names to features variables from stored names on features$feature. Obs: resolve duplicated names with make.unique function
-        ```{r}
+* Sets names to features variables from stored names on features$feature. Obs: resolve duplicated names with make.unique function
+```{r}
         names(humamActivityRecognition)[3:length(humamActivityRecognition)] <- make.unique(features$feature)
-        ```
-  * Select only the measurements on the mean and standard deviation for each feature measurement
-        ```{r}
+```
+
+* Select only the measurements on the mean and standard deviation for each feature measurement
+```{r}
         selectedMeasurement <- grepl("mean|std", names(humamActivityRecognition), ignore.case = T)
         humamActivityRecognition <- select(humamActivityRecognition, volunteerID, action, which(selectedMeasurement))
-         ```     
+ ```     
          
-  * merge activities labels with activities names sets:
-        ```{r}
+* merge activities labels with activities names sets:
+```{r}
         humamActivityRecognition <- merge(humamActivityRecognition, activities, by.x = "action", by.y = "id")
-        ```     
-  * sort humamActivityRecognition to correct arrange volunteers through id
-        ```{r}
+```  
+
+* sort humamActivityRecognition to correct arrange volunteers through id
+```{r}
         humamActivityRecognition <- arrange(humamActivityRecognition, volunteerID)
-        ```     
-  * select only volunteerID, activity and all feature collumns to form a new descriptive data set:
-        ```{r}
+```     
+
+* select only volunteerID, activity and all feature collumns to form a new descriptive data set:
+```{r}
         selectedMeasurement <- grepl("mean|std", names(humamActivityRecognition), ignore.case = T)
         humamActivityRecognition <- dplyr::select(humamActivityRecognition, volunteerID, activity, which(selectedMeasurement))
-        ```     
-  * Appropriately labels the data set with descriptive variable names
-        ```{r}
+```     
+
+* Appropriately labels the data set with descriptive variable names
+```{r}
         names(humamActivityRecognition) <- gsub("-","", names(humamActivityRecognition))
         names(humamActivityRecognition) <- gsub("\\s*\\(+\\)","", names(humamActivityRecognition))
-         ```     
-  * humamActivityRecognition will become:
+ ```     
+ 
+* humamActivityRecognition will become:
   
          str(humamActivityRecognition, list.len = 5)
         'data.frame':	10299 obs. of  88 variables:
@@ -246,10 +251,10 @@ Below are listed all operations realized on data from above variables
          - attr(*, ".internal.selfref")=<externalptr> 
          - attr(*, "sorted")= chr "action"
 
- Creates a second, independent tidy data set with the average of each variable for each activity and each subject
-        ```{r}
-         tidydataSet <- group_by(humamActivityRecognition, volunteerID, activity) %>% summarise_each(funs(mean))        
-        ```
+Creates a second, independent tidy data set with the average of each variable for each activity and each subject
+```{r}
+        tidydataSet <- group_by(humamActivityRecognition, volunteerID, activity) %>% summarise_each(funs(mean))        
+```
         
 # The tidy data set brief description generated with 'str' function, it was as follows:
 

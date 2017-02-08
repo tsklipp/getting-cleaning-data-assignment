@@ -89,6 +89,7 @@ Combine volunteerActionsList and volunteerFeatures to form a data set which incl
         # Using merged training and test data of correspondents volunteerActionsList and volunteerFeatures to create one data set 
         humamActivityRecognition <- dplyr::bind_cols(volunteerActionsList, volunteerFeatures)
         rm(volunteerActionsList, volunteerFeatures)
+
 ```
 Sets names to features variables. Filter the data set collumns to include only features related with measures of mean and standard deviation using 'grepl' function. There are features with duplicated names which causes error when using 'select' function, thus it is used the 'make.unique' function to distintique name all features. 
 ```{r}
